@@ -1,0 +1,56 @@
+{% extends "layout.html" %}
+{% block content %}
+<h3>Upload a Song</h3>
+<form method="POST" enctype="multipart/form-data">
+	<fieldset>
+		{{form.hidden_tag()}}
+		<div>
+			{{form.title.label}}
+			{% if form.title.errors %}
+				{{form.title}}
+				{% for error in form.title.errors %}
+					<span>{{error}}</span>
+				{% endfor %}
+			{% else %}
+				{{form.title}}
+			{% endif %}
+		</div>
+		<div>
+			{{form.artist.label}}
+			{% if form.artist.errors %}
+				{{form.artist}}
+				{% for error in form.artist.errors %}
+					<span>{{error}}</span>
+				{% endfor %}
+			{% else %}
+				{{form.artist}}
+			{% endif %}
+		</div>
+		<div>
+			{{form.album.label}}
+			{% if form.album.errors %}
+				{{form.album}}
+				{% for error in form.album.errors %}
+					<span>{{error}}</span>
+				{% endfor %}
+			{% else %}
+				{{form.album}}
+			{% endif %}
+		</div>
+		<div>
+			{{form.file.label}}
+			{% if form.file.errors %}
+				{{form.file}}
+				{% for error in form.file.errors %}
+					<span>{{error}}</span>
+				{% endfor %}
+			{% else %}
+				{{form.file}}
+			{% endif %}
+		</div>
+	</fieldset>
+	<div>
+		{{form.submit}}
+	</div>
+</form>
+{% endblock content %}

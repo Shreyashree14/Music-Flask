@@ -1,0 +1,13 @@
+{% extends "layout.html" %}
+{% block content %}
+	<div>
+		<h1>{{song.title}}</h1>
+		<h3>{{song.album}}</h3>
+		<h3>{{song.artist}}</h3>
+		<audio controls>
+			<source src="../static/{{song.file}}" type="audio/mpeg">
+		</audio>
+		<a href="{{url_for('download',song_id=song.id)}}"><h5>Download Song</h5></a>
+	
+	</div>
+{% endblock content %}
