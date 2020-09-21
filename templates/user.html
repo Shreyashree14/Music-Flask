@@ -1,12 +1,60 @@
 {% extends "layout.html" %}
 {% block content %}
-	<div style="float:left;margin-left:40px">
-		<h3>View all Songs</h3>
+	<div style="float:left">
+		<h2>View Songs</h2>
+	
+		<form method="POST">
+			<fieldset>
+				{{form.hidden_tag()}}
+				<div>
+					{{form.title.label}}
+					{{form.title}}
+					{% if form.title.errors %}
+						{% for error in form.title.errors %}
+							<span>{{error}}</span>
+						{% endfor %}
+					{% endif %}
+				</div>
+				<div>
+					{{form.album.label}}
+					{{form.album}}
+					{% if form.album.errors %}
+						{% for error in form.album.errors %}
+							<span>{{error}}</span>
+						{% endfor %}
+					{% endif %}
+				</div>
+				<div>
+					{{form.artist.label}}
+					{{form.artist}}
+					{% if form.artist.errors %}
+						{% for error in form.artist.errors %}
+							<span>{{error}}</span>
+						{% endfor %}
+					{% endif %}
+				</div>
+			</fieldset>
+			<div>{{form.submit}}</div>
+		</form>
+		
+		<div>
+			<h2>Search Results</h2>
+			<table>
+				<tr><th style="text-align: left">Title</th><th style="text-align: left">&nbsp;&nbsp;&nbsp;&nbsp;Album</th><th style="text-align: left">&nbsp;&nbsp;&nbsp;&nbsp;Artist</th></tr>
+				{% for song in songs %}
+					<div>
+						<tr><td><a href="{{url_for('song_page',song_id=song.id)}}" style="font-weight:bold">{{song.title}}</a></td>
+						<td>&nbsp;&nbsp;&nbsp;&nbsp;{{song.album}}</td><td>&nbsp;&nbsp;&nbsp;&nbsp;{{song.artist}}</td></tr>	
+					</div>		
+				{% endfor %}
+			</table>
+		</div>
 	</div>
-	<div style="float:right;margin-right:50px">
-		<a href="{{url_for('upload')}}"><h3>Upload a Song</h3></a><br>
-		<a href="{{url_for('my_uploads')}}"><h3>My Uploads</h3></a><br>
-		<a href=""><h3>Search Songs</h3></a><br>
+	<div style="float:right">
+		<a href="{{url_for('upload')}}"><h2>Upload a Song</h2></a><br>
+		<a href="{{url_for('my_uploads')}}"><h2>My Uploads</h2></a><br>
+		<a href="{{url_for('all_songs')}}"><h2>View All Songs</h2></a><br>
 	</div>
+		
 {% endblock content %}
 	

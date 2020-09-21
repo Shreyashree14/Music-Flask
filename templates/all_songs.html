@@ -1,0 +1,17 @@
+{% extends "layout.html" %}
+{% block content %}
+	<div>
+		<h2>All Songs</h2>
+		<table>
+			<tr><th style="text-align: left">Title</th><th style="text-align: left">&nbsp;&nbsp;&nbsp;&nbsp;Album</th><th style="text-align: left">&nbsp;&nbsp;&nbsp;&nbsp;Artist</th></tr>
+			{% for song in songs %}
+				<div>
+					<tr><td><a href="{{url_for('song_page',song_id=song.id)}}" style="font-weight:bold">{{song.title}}</a></td>
+					<td>&nbsp;&nbsp;&nbsp;&nbsp;{{song.album}}</td><td>&nbsp;&nbsp;&nbsp;&nbsp;{{song.artist}}</td></tr>	
+				</div>		
+			{% endfor %}
+		</table>
+	</div>
+{% endblock content %}
+		
+		

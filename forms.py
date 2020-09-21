@@ -26,3 +26,10 @@ class UploadForm(FlaskForm):
 	album=StringField("Album",validators=[DataRequired()])
 	file=FileField("Song Upload",validators=[DataRequired(),FileAllowed(['mp3'])])
 	submit=SubmitField("Upload")
+	
+class SearchForm(FlaskForm):
+	title=StringField("Title")
+	artist=StringField("Artist")
+	album=StringField("Album")
+	submit=SubmitField("Search")
+	

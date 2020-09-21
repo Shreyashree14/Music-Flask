@@ -14,7 +14,7 @@ login_manager.login_view='login'
 login_manager.login_message_category='info'
 
 from models import User,Song
-from forms import RegistrationForm,LoginForm,UploadForm
+from forms import RegistrationForm,LoginForm,UploadForm,SearchForm
 
 @app.route("/")
 def home():
@@ -47,11 +47,18 @@ def login():
 			return redirect(url_for('login'))
 	return render_template('login.html',form=form,title="Login Page")
 
-@app.route("/user")
+@app.route("/user",methods=["POST","GET"])
 @login_required
 def user():
-	songs=Song.query.filter_by(user=current_user)
-	return render_template('user.html',title="User Page",songs=songs)
+	form=SearchForm()
+	if form.validate_on_submit():
+		title=form.title.data+"%"
+		artist=form.artist.data+"%"
+		album=form.album.data+"%"
+		songs=Song.query.filter(Song.title.like(title),Song.artist.like(artist),Song.album.like(album))
+	else:
+		songs=Song.query.order_by(Song.title.asc()).all()
+	return render_template('user.html',title="User Page",songs=songs,form=form)
 
 @app.route("/logout")
 @login_required
@@ -108,6 +115,13 @@ def delete(song_id):
 def my_uploads():
 	songs=Song.query.filter_by(user=current_user)
 	return render_template('my_uploads.html',title="My Uploads",songs=songs)
-			
+
+@app.route("/allsongs")
+@login_required
+def all_songs():	
+	songs=Song.query.order_by(Song.title.asc()).all()
+	return render_template('all_songs.html',title="All Songs",songs=songs)
+
+	
 if __name__=='__main__':
 	app.run(debug=True)

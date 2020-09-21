@@ -4,7 +4,8 @@
 		{% for song in songs %}
 			<div>
 				<form action="{{ url_for('delete', song_id=song.id) }}" method="POST">
-					<a href="{{url_for('song_page',song_id=song.id)}}">{{song.title}}</a>
+					<a href="{{url_for('song_page',song_id=song.id)}}"><h4>{{song.title}}</h4></a>
+					{{song.album}}|{{song.artist}}
 					<input type="submit" value="Delete">
 				</form>
 			</div>		
