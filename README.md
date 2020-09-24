@@ -24,18 +24,21 @@ flask_wtf
 flask_limiter
 ```
 
-### Installation and Setup
+### Installation
 
 To install the above packages use:
 ```
 sudo pip install –r requirements.txt
 ```
+
+### Setup (Optional)
+
 Database file is already uploaded in the repo. To create your own db, navigate to app.py from the terminal and use the python interpreter:
 ```
 from app import db
 db.create_all()
 ```
-A secret key is present in the config.py file. Create your own using the python interpreter and replace the existing secret key:
+A secret key is present in the config.py file. To create your own, use the python interpreter to run the below code snippet and replace the secret key in the config.py file:
 ```
 import os
 print(os.urandom(16))
