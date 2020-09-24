@@ -1,14 +1,23 @@
 {% extends "layout.html" %}
 {% block content %}
-	<h2>My Uploads</h2>
-		{% for song in songs %}
-			<div>
-				<form action="{{ url_for('delete', song_id=song.id) }}" method="POST">
-					<a href="{{url_for('song_page',song_id=song.id)}}"><h4>{{song.title}}</h4></a>
-					{{song.album}}|{{song.artist}}
-					<input type="submit" value="Delete">
-				</form>
-			</div>		
-		{% endfor %}
+	<div style="float:left">
+		<h2>My Uploads</h2>
+			{% if songs |length ==0 %}
+				No Uploads to Show
+			{% else %}
+				{% for song in songs %}
+					<div>
+						<form action="{{ url_for('delete', song_id=song.id) }}" method="POST">
+							<a href="{{url_for('song_page',song_id=song.id)}}"><h4>{{song.title}}</h4></a>
+							{{song.album}}|{{song.artist}}
+							<input type="submit" value="Delete">
+						</form>
+					</div>		
+				{% endfor %}
+			{% endif %}
+	</div>
+	<div style="float:right">
+		<a href="{{url_for('upload')}}"><h5>Upload a Song? </h5></a>
+	</div>
 {% endblock content %}
 		

@@ -1,0 +1,44 @@
+{% extends "layout.html" %}
+{% block content %}
+	<form method="POST">
+		<fieldset>
+			{{form.hidden_tag()}}
+			<div>
+				{{form.title.label}}
+				{{form.title}}
+				{% if form.title.errors %}
+					{% for error in form.title.errors %}
+						<span>{{error}}</span>
+					{% endfor %}
+				{% endif %}
+			</div>
+			<div>
+				{{form.album.label}}
+				{{form.album}}
+				{% if form.album.errors %}
+					{% for error in form.album.errors %}
+						<span>{{error}}</span>
+					{% endfor %}
+				{% endif %}
+			</div>
+			<div>
+				{{form.artist.label}}
+				{{form.artist}}
+				{% if form.artist.errors %}
+					{% for error in form.artist.errors %}
+						<span>{{error}}</span>
+					{% endfor %}
+				{% endif %}
+			</div>
+		</fieldset>
+		<div>
+			{{form.submit}}
+		</div>
+	</form>
+	<h2>Search Results</h2>
+	{% for song in songs %}
+		<div>
+			<a href="{{url_for('song_page',song_id=song.id)}}"><h4>{{song.title}}</h4></a>
+		</div>		
+	{% endfor %}
+{% endblock content %}

@@ -2,11 +2,17 @@ from flask import Flask,redirect,render_template,url_for,flash,send_file,request
 from flask_login import LoginManager,login_user,logout_user,current_user,login_required
 from flask_sqlalchemy import SQLAlchemy
 from flask_bcrypt import Bcrypt
+from flask_limiter import Limiter
+from flask_limiter.util import get_remote_address
 import secrets,os
 
 app=Flask(__name__)
-app.config["SECRET_KEY"]="fd7a97d9ce9bf2c7af93d4f5f83338f5"
-app.config["SQLALCHEMY_DATABASE_URI"]="sqlite:///site.db"
+app.config.from_pyfile('config.py')
+limiter = Limiter(
+    app,
+    key_func=get_remote_address,
+    default_limits=["1000 per day", "100 per hour"]
+)
 db=SQLAlchemy(app)
 bcrypt=Bcrypt(app)
 login_manager=LoginManager(app)
@@ -28,7 +34,7 @@ def register():
 		user=User(email=form.email.data,password=hashed_pass)
 		db.session.add(user)
 		db.session.commit()
-		flash(f"Account Created","success")
+		flash(f"Account created for {user.email}. Please Login","success")
 		return redirect(url_for('login'))
 	return render_template('register.html',form=form,title="Registration Page")
 	
@@ -40,7 +46,10 @@ def login():
 		user=User.query.filter_by(email=form.email.data).first()
 		if user and bcrypt.check_password_hash(user.password,form.password.data):
 			login_user(user)
-			flash(f"Logged In",'success')
+			flash(f"Logged in as {user.email}",'success')
+			next_page=request.args.get('next')
+			if next_page:
+				return redirect(next_page)
 			return redirect(url_for('user'))
 		else:
 			flash(f"Login Unsuccessful","danger")
@@ -52,10 +61,10 @@ def login():
 def user():
 	form=SearchForm()
 	if form.validate_on_submit():
-		title=form.title.data+"%"
-		artist=form.artist.data+"%"
-		album=form.album.data+"%"
-		songs=Song.query.filter(Song.title.like(title),Song.artist.like(artist),Song.album.like(album))
+		title="%"+form.title.data+"%"
+		artist="%"+form.artist.data+"%"
+		album="%"+form.album.data+"%"
+		songs=Song.query.filter(Song.title.like(title),Song.artist.like(artist),Song.album.like(album)).all()
 	else:
 		songs=Song.query.order_by(Song.title.asc()).all()
 	return render_template('user.html',title="User Page",songs=songs,form=form)
@@ -85,26 +94,38 @@ def upload():
 		db.session.add(song)
 		db.session.commit()
 		flash("Song uploaded successfully","success")
-		return redirect(url_for('user'))
+		return redirect(url_for('my_uploads'))
 	return render_template("upload.html",title="Upload Song",form=form)
 
 @app.route("/<song_id>")
 @login_required	
 def song_page(song_id):
 	song=Song.query.filter_by(id=song_id).first()
+	if not song:
+		flash("Song URL Invalid","info")
+		return redirect(url_for('user'))
 	return render_template("song_page.html",title="Song Page",song=song)
 
 @app.route("/<song_id>/download")
 @login_required
 def download(song_id):
 	song=Song.query.filter_by(id=song_id).first()
+	if not song:
+		flash("Song URL Invalid","info")
+		return redirect(url_for('user'))
 	file=os.path.join(app.root_path,"static",song.file)
 	return send_file(file,as_attachment=True,attachment_filename=song.title)
 	
 @app.route("/<song_id>/delete",methods=['POST','GET'])
 @login_required	
 def delete(song_id):
+	song=Song.query.filter_by(id=song_id).first()
+	if not song:
+		flash("Song URL Invalid","info")
+		return redirect(url_for('user'))
 	if request.method=="POST":
+		file=os.path.join(app.root_path,"static",song.file)
+		os.remove(file)
 		Song.query.filter_by(id=song_id).delete()
 		db.session.commit()
 		flash("Song deleted successfully","success")
@@ -113,7 +134,7 @@ def delete(song_id):
 @app.route("/myuploads")
 @login_required
 def my_uploads():
-	songs=Song.query.filter_by(user=current_user)
+	songs=Song.query.filter_by(user=current_user).all()
 	return render_template('my_uploads.html',title="My Uploads",songs=songs)
 
 @app.route("/allsongs")

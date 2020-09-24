@@ -1,53 +1,62 @@
 {% extends "layout.html" %}
 {% block content %}
 	<div style="float:left">
-		<h2>View Songs</h2>
-	
-		<form method="POST">
-			<fieldset>
-				{{form.hidden_tag()}}
-				<div>
-					{{form.title.label}}
-					{{form.title}}
-					{% if form.title.errors %}
-						{% for error in form.title.errors %}
-							<span>{{error}}</span>
-						{% endfor %}
-					{% endif %}
-				</div>
-				<div>
-					{{form.album.label}}
-					{{form.album}}
-					{% if form.album.errors %}
-						{% for error in form.album.errors %}
-							<span>{{error}}</span>
-						{% endfor %}
-					{% endif %}
-				</div>
-				<div>
-					{{form.artist.label}}
-					{{form.artist}}
-					{% if form.artist.errors %}
-						{% for error in form.artist.errors %}
-							<span>{{error}}</span>
-						{% endfor %}
-					{% endif %}
-				</div>
-			</fieldset>
-			<div>{{form.submit}}</div>
-		</form>
-		
+		<div>
+			<h2>View Songs</h2>
+			<form method="POST">
+				<fieldset>
+					{{form.hidden_tag()}}
+					<div>
+						{{form.title.label}}
+						{{form.title}}
+						{% if form.title.errors %}
+							{% for error in form.title.errors %}
+								<span>{{error}}</span>
+							{% endfor %}
+						{% endif %}
+					</div>
+					<div>
+						{{form.album.label}}
+						{{form.album}}
+						{% if form.album.errors %}
+							{% for error in form.album.errors %}
+								<span>{{error}}</span>
+							{% endfor %}
+						{% endif %}
+					</div>
+					<div>
+						{{form.artist.label}}
+						{{form.artist}}
+						{% if form.artist.errors %}
+							{% for error in form.artist.errors %}
+								<span>{{error}}</span>
+							{% endfor %}
+						{% endif %}
+					</div>
+				</fieldset>
+				<div>{{form.submit}}</div>
+			</form>
+		</div>
 		<div>
 			<h2>Search Results</h2>
-			<table>
-				<tr><th style="text-align: left">Title</th><th style="text-align: left">&nbsp;&nbsp;&nbsp;&nbsp;Album</th><th style="text-align: left">&nbsp;&nbsp;&nbsp;&nbsp;Artist</th></tr>
-				{% for song in songs %}
-					<div>
-						<tr><td><a href="{{url_for('song_page',song_id=song.id)}}" style="font-weight:bold">{{song.title}}</a></td>
-						<td>&nbsp;&nbsp;&nbsp;&nbsp;{{song.album}}</td><td>&nbsp;&nbsp;&nbsp;&nbsp;{{song.artist}}</td></tr>	
-					</div>		
-				{% endfor %}
-			</table>
+			{% if songs |length ==0 %}	
+				No Results Found
+			{% else %}
+				<table>
+					<tr>
+						<th style="text-align: left">Title</th>
+						<th style="text-align: left">&nbsp;&nbsp;&nbsp;&nbsp;Album</th>
+						<th style="text-align: left">&nbsp;&nbsp;&nbsp;&nbsp;Artist</th>
+					</tr>
+					{% for song in songs %}
+						<tr>
+							<td><a href="{{url_for('song_page',song_id=song.id)}}" style="font-weight:bold">{{song.title}}</a></td>
+							<td>&nbsp;&nbsp;&nbsp;&nbsp;{{song.album}}</td>
+							<td>&nbsp;&nbsp;&nbsp;&nbsp;{{song.artist}}</td>
+						</tr>		
+					{% endfor %}
+				</table>
+			{% endif %}
 		</div>
 	</div>
 	<div style="float:right">

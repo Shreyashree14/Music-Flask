@@ -3,32 +3,35 @@
 	<h1>Login</h1>
 	<form method="POST">
 		<fieldset>
-		{{form.hidden_tag()}}
-		<div>
-		{{form.email.label}}
-		{% if form.email.errors %}
-			{{form.email}}
-			{% for error in form.email.errors %}
-				<span>{{error}}</span>
-			{% endfor %}
-		{% else %}
-			{{form.email}}
-		{% endif %}
-		</div>
-		<div>
-		{{form.password.label}}
-		{% if form.password.errors %}
-			{{form.password}}
-			{% for error in form.password.errors %}
-				<span>{{error}}</span>
-			{% endfor %}
-		{% else %}
-			{{form.password}}
-		{% endif %}
-		</div>
+			{{form.hidden_tag()}}
+			<div>
+				{{form.email.label}}
+				{% if form.email.errors %}
+					{{form.email}}
+					{% for error in form.email.errors %}
+						<span>{{error}}</span>
+					{% endfor %}
+				{% else %}
+					{{form.email}}
+				{% endif %}
+			</div>
+			<div>
+				{{form.password.label}}
+				{% if form.password.errors %}
+					{{form.password}}
+					{% for error in form.password.errors %}
+						<span>{{error}}</span>
+					{% endfor %}
+				{% else %}
+					{{form.password}}
+				{% endif %}
+			</div>
 		</fieldset>
 		<div>
-		{{form.submit}}
+			{{form.submit}}
 		</div>
 	</form>
+	
+	<h4>Haven't registered yet? <a href="{{url_for('register')}}"> Sign Up</a></h4>
+	
 {% endblock content %}
